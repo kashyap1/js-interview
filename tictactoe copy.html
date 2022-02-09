@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<head>
+    <style>
+        div>div {
+            border: 1px solid blue;
+            display: inline-block;
+            line-height: 140px;
+            vertical-align: middle;
+            text-align: center;
+            width: 140px;
+            height: 140px;
+            font-size: 40px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="msg"></div>
+    <button id="reset">Reset</button>
+    <div id="cont"></div>
+
+    <script>
+        var tictactoe = function (size) {
+            size = size || 3;
+            var selectedBoxes = {'O': {}, 'X': {}};
+            var container = document.getElementById('cont');
+            var currentMark = 'O';
+
+            function toggleMark() {
+                currentMark = currentMark === 'O' ? 'X' : 'O';
+            }
+            function onSelectBox(pos, e) {
+                if(e.target.innerText) {
+                    return;
+                }
+                selectedBoxes[currentMark][pos.row+''+pos.col] = true;
+                e.target.innerText = currentMark;
+                notifyUser(checkIfWon(selectedBoxes[currentMark], pos));
+                toggleMark();
+            }
+            function renderBoard() {
+                for (row = 0; row < size; row++) {
+                    for (col = 0; col < size; col++) {
+                        var boxId = "box_" + row + col;
+                        var div = document.createElement('div');
+                            div.setAttribute('id', boxId);
+                            div.setAttribute('text', '');
+                            div.addEventListener("click", onSelectBox.bind(null, { row: row, col: col }));
+                        container.appendChild(div);
+                    }
+                    container.appendChild(document.createElement('br'));
+                }
+            }
+
+            function checkIfWon(selectedBoxes, pos) {
+                var isWon = false;
+                var row = pos.row;
+                var col = pos.col;
+                var selectedAllHori = true;
+                var selectedAllVert = true;
+                var selectedLeftDiagonal = true;
+                var selectedRightDiagonal = true;
+
+                if (!Object.keys(selectedBoxes).length) {
+                    return false;
+                }
+
+                for (i = 0; i < size; i++) {
+                    //check horizontal
+                    if (!selectedBoxes[row + '' + i]) {
+                        selectedAllHori = false;
+                    }
+                    //check vertical
+                    if (!selectedBoxes[i + '' + col]) {
+                        selectedAllVert = false;
+                    }
+                    //check diagonal left to right
+                    if (!selectedBoxes[i + '' + i]) {
+                        selectedLeftDiagonal = false;
+                    }
+                    if(!selectedBoxes[(size - i -1) + '' + i]) {
+                        selectedRightDiagonal = false;
+                    }
+                }
+                return selectedAllHori || selectedAllVert || selectedLeftDiagonal || selectedRightDiagonal;
+            }
+            function notifyUser(won) {
+                if(won) {
+                    document.getElementById('msg').innerHTML = 'Congratulation!!!...';
+                }
+            }
+
+            function resetGame() {
+                for (row = 0; row < size; row++) {
+                    for (col = 0; col < size; col++) {
+                        document.getElementById("box_" + row + col).innerText = '';
+                    }
+                }
+                selectedBoxes = {'O': {}, 'X': {}};
+                currentMark = 'O';
+                document.getElementById("msg").innerText = '';
+            }
+            renderBoard();
+            document.getElementById('reset').addEventListener("click", resetGame);
+        }
+        tictactoe();
+
+
+
+    </script>
+</body>
+
+</html>

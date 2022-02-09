@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<body>
+
+   <script>
+       function msgParts(value, length) {
+            var result = [];
+            var createParts = function(index) {
+                var nextIndex = index + length;
+                result.push(value.slice(index, nextIndex));
+                if(nextIndex < value.length) {
+                    createParts(nextIndex);
+                }
+            }
+            createParts(0)
+            return result;
+       }
+
+       console.log(msgParts('1234567890', 4));
+
+    </script>
+</body>
+
+</html>

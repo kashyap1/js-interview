@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<body>
+
+    <script>
+        var tasks = [
+        function() {
+            console.log(0);
+        },function() {
+            console.log(1);
+        },function() {
+            console.log(2);
+        },
+        function() {
+            console.log(3);
+        },
+        function() {
+            console.log(4);
+        },
+        function() {
+            console.log(5);
+        },
+        function() {
+            console.log(6);
+        },
+        function() {
+            console.log(7);
+        }
+        ];
+        var timeout;
+        function throttler(tasks, number) {
+           if(timeout) {
+               return;
+           }
+            timeout = setTimeout(function() {
+                if(tasks.length && number) {
+                    var tasksToExecute = tasks.splice(0, number);
+                    tasksToExecute.forEach(task => {
+                        task();
+                    });
+                    console.log('---------------->>>', tasks, tasksToExecute);
+                    timeout = undefined;
+                    throttler(tasks, number);
+                }
+            }, 200)
+
+        }
+        throttler(tasks, 2);
+
+        throttler(tasks, 2);throttler(tasks, 2);throttler(tasks, 2);throttler(tasks, 2);throttler(tasks, 2);throttler(tasks, 2);throttler(tasks, 2);throttler(tasks, 2);
+    </script>
+</body>
+
+</html>

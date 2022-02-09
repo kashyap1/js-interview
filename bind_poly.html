@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<head>
+</head>
+
+<body>
+
+  <script>
+    let basic = {
+      'name': 'shyam',
+      'age': 24
+    };
+
+    function callMe(city) {
+      return 'Hi! my name is ' + this.name + ' and my age is ' + this.age + ' and my city is ' + arguments[0] + ' and state is ' + arguments[1];
+    }
+    let callBinded = callMe.bind(basic, 'jammu');
+    console.log(callBinded('j&k'));
+
+    Function.prototype.bi = function(context) {
+      var parentArgs = Array.prototype.slice.call(arguments, 1);
+      const that = this;
+      return function() {
+        var args = Array.prototype.slice.call(arguments);
+        return that.apply(context, parentArgs.concat(args));
+      }
+    };
+    console.log(callMe.bi(basic, 'jammu')('j&k'));
+
+
+    function callWithData(a, b) {
+      console.log(this.p + ' Here is ' + a + ' ' + b);
+    }
+
+    callWithData.call({
+      p: 'dd'
+    }, 'a', 'b')
+
+    Function.prototype.ca = function(context, ...args) {
+      const obj = Object.create(context);
+      obj[this.name] = this;
+      return obj[this.name](...args);
+    };
+    callWithData.ca({
+      p: 'dd'
+    }, 'a', 'b')
+  </script>
+</body>
+
+</html>

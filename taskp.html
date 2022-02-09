@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<body>
+
+    <script>
+        var tasks = [
+        function(resolve) {
+            setTimeout(function() {
+                console.log(300);
+                resolve(2000)
+            },2000)
+        },function(resolve) {
+            setTimeout(function() {
+                console.log(1000);
+                resolve(1000)
+            },1000)
+        },function(resolve) {
+            setTimeout(function() {
+                console.log(600);
+                resolve(600)
+            },600)
+        },
+        function(resolve) {
+            setTimeout(function() {
+                console.log(1500);
+                resolve(3000)
+            },3000)
+        },
+        function(resolve) {
+            setTimeout(function() {
+                console.log(1400);
+                resolve(1400)
+            },1400)
+        },
+        function(resolve) {
+            setTimeout(function() {
+                console.log(500);
+                resolve(500)
+            },500)
+        },
+        function(resolve) {
+            setTimeout(function() {
+                console.log(300);
+                resolve(300)
+            },300)
+        },
+        function(resolve) {
+            setTimeout(function() {
+                console.log(900);
+                resolve(900)
+            },900)
+        }
+        ];
+        var timeout;
+        function throttler(tasks, number) {
+           if(timeout) {
+               return;
+           }
+            timeout = setTimeout(function() {
+                if(tasks.length && number) {
+                    var tasksToExecute = tasks.splice(0, number);
+                    Promise.all(tasksToExecute.map(value => new Promise(value)))
+                        .then(values => throttler(tasks, number));
+                    timeout = undefined;
+                }
+            }, 0);
+        }
+        throttler(tasks, 2);
+        throttler(tasks, 2);
+        throttler(tasks, 2);
+        throttler(tasks, 2);
+        throttler(tasks, 2);
+        throttler(tasks, 2);
+        throttler(tasks, 2);
+        throttler(tasks, 2);
+        throttler(tasks, 2);
+    </script>
+</body>
+
+</html>

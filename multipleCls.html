@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<body>
+    <div id="hello">Hello World</div>
+    <script>
+
+        function $(id) {
+            var res = {
+                addClass: function() {
+                    document.querySelector(id).classList.add.apply(document.querySelector(id).classList,  arguments);
+                    return res;
+                }
+            };
+            return res;
+        }
+
+    $('#hello').addClass('c1', 'c2', 'n1', 'n2');
+    </script>
+</body>
+
+</html>

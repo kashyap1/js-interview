@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<body>
+    <div id="timer" style="height: 1200px;"></div>
+
+    <script>
+        var checkForBottomPageAndRequest = (function () {
+            var isRequesting = false;
+            var handler = null;
+            return checkForBottomPageAndRequest = function () {
+
+                if (handler) {
+                    return;
+                }
+
+                handler = setTimeout(function () {
+                    if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight && !isRequesting) {
+                        console.log('at the bottom of the page');
+
+                        isRequesting = true;
+                        var sendrequest = function (resolve) {
+                            setTimeout(function () {
+                                resolve(true);
+                            }, 5000);
+                        }
+                        new Promise(sendrequest).then(function () {
+                            isRequesting = false;
+                        });
+                        handler = null;
+                    } else {
+                        handler = null;
+                    }
+                }, 250);
+
+                checkForBottomPageAndRequest();
+            }
+        })();
+        window.addEventListener('scroll', checkForBottomPageAndRequest)
+
+
+
+    </script>
+</body>
+
+</html>

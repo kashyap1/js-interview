@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<body>
+    <div class='scr'>
+    </div>
+
+    <script>
+        var start = 0;
+        function addContent() {
+            var div = document.createElement('div');
+            var s = '';
+            for(i= start; i < start + 60; i++) {
+                s += '<div>'+ i +'</div>';
+            }
+            start  = i;
+            div.innerHTML = s;
+            document.querySelector('.scr').appendChild(div);
+        }
+        window.onscroll = function(ev) {
+            console.log(window.innerHeight, window.scrollY, document.body.offsetHeight);
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                addContent();
+            }
+        }
+        addContent();
+    </script>
+</body>
+
+</html>

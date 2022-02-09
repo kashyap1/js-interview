@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<head>
+</head>
+
+<body>
+
+  <script>
+    const promise1 = (resolve, reject) => {
+      setTimeout(resolve, 2000, 'foo');
+    };
+    const promise2 = (r1, reject) => {
+      setTimeout(r1, 2000, 'bar');
+    };
+    const promise3 = (r2, reject) => {
+      setTimeout(r2, 3000, 'baz');
+    };
+   // Promise.all([promise1, promise2, promise3]).then((values) => {
+     // console.log(values);
+    //});
+
+    //const p = (allProm) => {
+    //  return allProm.slice(1).reduce((acc, value) => {
+    //    return acc.then(() =>
+    //    {acc = value
+    //    });
+    //  }, allProm[0]);
+    //};
+
+
+    const promiseAll = function(promises, cb) {
+        const res = [];
+        const executeProm = (p) => {
+          const prom = p.shift();
+          new Promise(prom).then((data) => {
+            res.push(data);
+            p && p.length ? executeProm(p) : cb(res);
+          });
+        };
+        executeProm(promises);
+    };
+
+    promiseAll([promise1, promise2, promise3], (arg) => {
+      console.log('finally', arg);
+    });
+
+
+function fib(cur, ar = [0, 1]) {
+  if(cur) {
+    ar.push(cur);
+  }
+  if(!cur || cur < 100) {
+    fib(ar[ar.length - 1] + ar[ar.length - 2], ar);
+  }
+  return ar;
+}
+console.log(fib());
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <style>
+        .progWrapper{
+            display: block;
+            border: 1px solid #a3a3a3;
+            margin: 2px;
+            border-radius: 5px;
+        }
+        .progress {
+            height: 20px;
+            width: 0;
+            border-radius: 5px;
+        }
+        .showProgress {
+            background: #CCCCCC;
+            width: 100%;
+            animation: animate 4s;
+        }
+         @keyframes animate {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+        </style>
+</head>
+
+<body>
+<button id="addProgressBar">Add</button>
+<div id="container"></div>
+<script>
+var addProgressBar = document.getElementById('addProgressBar');
+var container = document.getElementById('container');
+
+function progressBars(container) {
+    var queue = [];
+    var isAnimating = false;
+
+    function animate() {
+        if(!queue.length || isAnimating) {
+            return;
+        }
+        isAnimating = true;
+
+        var progress = queue.shift();
+        progress.classList.add('showProgress');
+        progress.addEventListener('animationend', function () {
+            isAnimating = false;
+            animate();
+        });
+    }
+
+    return {
+        add: function() {
+            var div = document.createElement('div');
+            div.classList.add('progWrapper');
+            div.innerHTML = `<div class='progress'></div>`;
+            container.appendChild(div);
+            queue.push(div.querySelector('.progress'));
+            animate();
+        }
+    };
+}
+
+var progressBars = progressBars(container);
+
+addProgressBar.addEventListener('click', progressBars.add);
+</script>
+</body>
+</html>

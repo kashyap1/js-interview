@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <style>
+        .progWrapper{
+            display: block;
+            border: 1px solid #a3a3a3;
+            margin: 2px;
+            border-radius: 5px;
+        }
+        .progress {
+            height: 20px;
+            width: 0;
+            border-radius: 5px;
+        }
+        .showProgress {
+            background: #CCCCCC;
+            width: 100%;
+            animation: animate 3s;
+        }
+         @keyframes animate {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+        </style>
+</head>
+
+<body>
+<button id="addProgressBar">Add</button>
+<div id="container"></div>
+<script>
+var addProgressBar = document.getElementById('addProgressBar');
+var container = document.getElementById('container');
+function executePromise(cb) {
+    var queue = [];
+    var isProgress = false;
+    return {
+        runAnimation: function runAnimation(el) {
+        if(el) {
+            queue.push(el);
+        }
+        if(!queue.length || isProgress) {
+            return;
+        }
+        isProgress = true;
+        new Promise(cb.bind(this, queue.shift())).then(function () {
+            isProgress = false;
+            runAnimation();
+        });
+    }};
+}
+
+function progressBars(container) {
+    var exPromise = executePromise(animate);
+    function animate(progress, resolve) {
+        progress.classList.add('showProgress');
+        progress.addEventListener('animationend', function () {
+            resolve(true);
+        })
+    }
+
+    return {
+        add: function() {
+            var div = document.createElement('div');
+            div.classList.add('progWrapper');
+            div.innerHTML = `<div class='progress'></div>`;
+            container.appendChild(div);
+            exPromise.runAnimation(div.querySelector('.progress'));
+        }
+    };
+}
+
+var progressBars = progressBars(container);
+
+addProgressBar.addEventListener('click', progressBars.add);
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<head>
+    <style>
+        .progressWrapper {
+            display: block;
+            height: 20px;
+            border: 1px solid #ccc;
+        }
+
+        .progressBar {
+            background: #f0f;
+            height: 20px;
+            animation: showProgress 1s;
+        }
+
+        @keyframes showProgress {
+            0% {
+                width: 0;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button id="addProgress">Add Progress</button>
+    <div id="progressBarContainer"></div>
+    <script>
+        var progressBar = function (id, options) {
+            var queue = [];
+            var i = 0;
+            var isExecuting = false;
+            function addToQueue(func) {
+                queue.push(function () {
+                    return new Promise(func)
+                });
+            }
+
+            function execute() {
+                console.log('isExecuting', isExecuting, queue.length);
+                if (queue.length) {
+                    var promiseFunction = queue.shift()
+                    promiseFunction().then(function () {
+                        execute();
+                    });
+                    isExecuting = true;
+                } else {
+                    isExecuting = false;
+                }
+
+            }
+
+            function renderProgressBar() {
+                i++;
+                var container = document.getElementById(id);
+                container.innerHTML += `<div class='progressWrapper'>
+          <div class='progressBar' id="progressbar${i}"></div>
+          </div>`;
+                return document.querySelector(`#progressbar${i}`);
+            }
+
+
+
+            document.getElementById("addProgress").addEventListener("click", function () {
+
+                addToQueue(function (resolve, reject) {
+
+
+                    renderProgressBar()
+                        .addEventListener("animationend", () => {
+                            // console.log("Animation ended", resolve);
+                            resolve(true);
+                        });
+
+                });
+                console.log('isExecuting===>', isExecuting);
+                if (!isExecuting) {
+                    execute();
+                }
+            });
+        };
+
+        progressBar("progressBarContainer", {});
+
+    </script>
+</body>
+
+</html>

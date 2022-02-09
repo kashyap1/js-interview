@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<body>
+
+   <script>
+       function subStringSet(data, setValues) {
+            return Object.keys(setValues).reduce(function(result, value) {
+                return result.replace(value, setValues[value]);
+            }, data);
+       }
+
+       console.log(subStringSet('this is kashyap tatmiya from india.', {'kashyap':'john', 'india': 'US'}));
+
+    </script>
+</body>
+
+</html>

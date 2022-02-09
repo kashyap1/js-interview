@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<head>
+    <style>
+        .progressBarContainer {
+            height: 20px;
+            border: 1px solid #cccccc;
+        }
+        .progressBar {
+            width: 0%;
+            display: inline-block;
+            height: 20px;
+            background: #ff00ff;
+        }
+        .load {
+            width: 100%;
+            animation: animate 3s;
+        }
+        @keyframes animate {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+ </style>
+</head>
+
+<body>
+    <button id="addProgressbar">Add Progressbar</button>
+    <div id="container">
+
+    </div>
+    <script>
+
+    (function () {
+        var queue = [];
+        var isAnimating = false;
+        var cont = document.getElementById('container');
+        var i = 0;
+
+        function animateProgress() {
+            console.log(queue.length, isAnimating)
+            if(!isAnimating && queue.length) {
+                new Promise(function(resolve) {
+                    isAnimating = true;
+                    var progressBarId = queue.shift();
+                    var el = document.getElementById(progressBarId);
+                    el.addEventListener('animationend', function(){
+                        isAnimating = false;
+                        animateProgress();
+                        resolve(true);
+                    });
+                    el.classList.add("load");
+                });
+            }
+        }
+
+        function addProgressBar() {
+            i++;
+            var progressBarId = `progress${i}`;
+            var div = document.createElement('div')
+            div.innerHTML += `<div class="progressBarContainer">
+                    <div class="progressBar" id="${progressBarId}">
+                        </div>
+                </div>`;
+            cont.appendChild(div)
+
+            queue.push(progressBarId);
+            animateProgress();
+        }
+
+        document.getElementById('addProgressbar').addEventListener('click', addProgressBar);
+
+    })();
+
+    </script>
+</body>
+
+</html>

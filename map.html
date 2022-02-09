@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<body>
+
+   <script>
+       Array.prototype.reduce1 = function(cb, initialValue) {
+           var accumulator = initialValue;
+            this.forEach((value, index) => {
+                accumulator = cb.apply(null, [accumulator, value, index]);
+            });
+            return accumulator;
+       }
+       Array.prototype.map1 = function(cb) {
+           var accumulator = [];
+            this.forEach((value, index) => {
+                accumulator.push(cb.apply(null, [value, index]));
+            });
+            return accumulator;
+       }
+
+       var reduced = [1,2,3].reduce1(function(res, val) {
+        res += val;
+        return res;
+       }, 0);
+       console.log(reduced);
+       var mapped = [1,2,3].map1(function(val) {
+           return val * 2;
+       }, 0);
+       console.log(mapped);
+
+    </script>
+</body>
+
+</html>

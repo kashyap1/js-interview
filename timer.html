@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<body>
+    <div id="timer"></div>
+
+    <script>
+
+        const timerComponent = (function (id) {
+            var timer, start, stop,
+                interval,
+                counter = 0,
+                startTimer = function () {
+                    interval = setInterval(function () {
+                        timer.innerText = counter;
+                        counter++;
+                    }, 500);
+                },
+                stopTimer = function () {
+                    clearInterval(interval);
+                },
+                resetTimer = function () {
+                    counter = 0;
+                    clearInterval(interval);
+                    timer.innerText = counter;
+                };
+
+
+            return {
+                init: function () {
+                    document.getElementById(id).innerHTML = `<div id="timerDisplay" class="timerDisplay"></div>
+                        <div class="timerController">
+                            <button id="start">Start</button>
+                            <button id="stop">Stop</button>
+                            <button id="reset">Reset</button>
+                        </div>`;
+                    timer = document.getElementById('timerDisplay');
+                    start = document.getElementById('start');
+                    stop = document.getElementById('stop');
+                    timer.style = 'height:40px;';
+                    start.addEventListener('click', startTimer);
+                    stop.addEventListener('click', stopTimer);
+                    reset.addEventListener('click', resetTimer);
+                }
+            }
+
+        }('timer'));
+        timerComponent.init();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<head>
+</head>
+<body>
+    <script>
+        function TaskRunner(noOfTaskToRun) {
+            var threadPool = [];
+            var isProcessing = false;
+            var cb;
+
+            function runTask() {
+
+                if (isProcessing || !threadPool.length) {
+                    return;
+                }
+                var tasksToExecute = threadPool.splice(0, noOfTaskToRun);
+                isProcessing = true;
+                Promise.all(tasksToExecute.map(function (task) {
+                    return new Promise(task);
+                })).then(function () {
+                    isProcessing = false;
+                    runTask();
+                });
+            }
+
+            this.push = function (task) {
+                threadPool.push(task);
+                runTask();
+            }
+
+            this.task = function (callback) {
+                cb = callback;
+            }
+        }
+
+        taskRunner = new TaskRunner(2);
+        taskRunner.task(function (cb) {
+            cb();
+        });
+
+
+        taskRunner.push(function (resolve) {
+            setTimeout(function () {
+                console.log(1);
+                resolve(true)
+            }, 1000);
+        });
+
+        taskRunner.push(function (resolve) {
+            setTimeout(function () {
+                console.log(2);
+                resolve(true);
+            }, 2000)
+        });
+
+        taskRunner.push(function (resolve) {
+            setTimeout(function () {
+                console.log(3);
+                resolve(true);
+            }, 2000)
+        });
+        taskRunner.push(function (resolve) {
+            setTimeout(function () {
+                console.log(4);
+                resolve(true);
+            }, 2000)
+        });
+        taskRunner.push(function (resolve) {
+            setTimeout(function () {
+                console.log(5);
+                resolve(true);
+            }, 3000)
+        });
+        taskRunner.push(function (resolve) {
+            setTimeout(function () {
+                console.log(6);
+                resolve(true);
+            }, 2000)
+        });
+    </script>
+</body>
+
+</html>

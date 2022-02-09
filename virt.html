@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<head>
+    <style>
+        .outerDiv {
+            border: 1px solid #ccc;
+            position: relative;
+            overflow: auto;
+            height: 300px;
+            width: 300px;
+        }
+
+        .frame {
+            width: 280px;
+            position: relative;
+        }
+
+        .row {
+            position: relative;
+            border-bottom: 1px solid #cc0;
+            height: 20px;
+        }
+
+        .rowContainer {
+            width: 280px;
+            position: absolute;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='outerDiv'>
+        <div class='frame'>
+        </div>
+    </div>
+
+    <script>
+
+        var data = (function () {
+            var result = [];
+            for (var i = 0; i < 10000; i++) {
+                result.push(i);
+            };
+            return result;
+        })(),
+            config = {
+                rowHeight: 20,
+                containerHeight: 300,
+                outerDiv: '.outerDiv',
+                frame: '.frame'
+            },
+            virtualisedList = (function (data, config) {
+
+                var totalRows = data.length;
+                var frameHeight = totalRows * config.rowHeight;
+                document.querySelector(config.frame).style.height = frameHeight + 'px';
+
+                var onScroll = function () {
+                    var timeout;
+
+                    if (timeout) {
+                        clearTimeout(timeout);
+                    }
+
+                    timeout = setTimeout(function () {
+                        var scrollTop = document.querySelector(config.outerDiv).scrollTop;
+                        var index = Math.ceil(scrollTop / (config.rowHeight + 1));
+                        var startIndex = index > data.length - config.containerHeight / config.rowHeight ? (data.length + 1 - config.containerHeight / config.rowHeight) : index;
+                        if (index <= data.length - config.containerHeight / config.rowHeight) {
+                            renderList(startIndex, scrollTop);
+                        }
+                    }, 0);
+                }
+
+                var renderList = function (startIndex, scrollTop) {
+                    var div = document.createElement('div');
+                    div.classList.add('rowContainer');
+                    div.style.top = (scrollTop) + 'px';
+
+                    var endIndex = startIndex + config.containerHeight / config.rowHeight;
+                    endIndex = endIndex > data.length ? data.length : endIndex;
+                    var rows = '';
+                    for (var i = startIndex; i < endIndex; i++) {
+                        rows += '<div class="row">' + data[i] + '</div>';
+                    }
+                    div.innerHTML = rows;
+                    document.querySelector(config.frame).innerHTML = '';
+                    document.querySelector(config.frame).appendChild(div);
+                };
+
+                renderList(0, 0);
+                document.querySelector(config.outerDiv).
+                    addEventListener('scroll', onScroll);
+            })(data, config);
+    </script>
+</body>
+
+</html>

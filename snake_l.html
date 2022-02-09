@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<head>
+    <style>
+        div>div {
+            border: 1px solid blue;
+            display: inline-block;
+            line-height: 32px;
+            text-align: center;
+            margin: 8px;
+            width: 32px;
+            height: 32px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cont"></div>
+
+    <script>
+        var offset = 5;
+        var total = 50;
+        var printBackward = false;
+        var offsetTrigger = 0;
+        var cont = document.getElementById('cont');
+
+        for (var i = total; i > 0; i--) {
+            var modOffset = i % offset;
+            if (modOffset === 0 && i < total) {
+                cont.innerHTML += "<br/>";
+            }
+            if (modOffset === 0) {
+                printBackward = !printBackward;
+                offsetTrigger = i;
+            }
+
+            if (printBackward) {
+                cont.innerHTML += '<div>' + i + '</div>';
+            } else {
+                var data = offsetTrigger + 1 - modOffset;
+                var num = modOffset === 0 ? data - offset : data;
+                cont.innerHTML += '<div >' + num + '</div>';
+            }
+
+        }
+
+    </script>
+</body>
+
+</html>
